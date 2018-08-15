@@ -1,0 +1,165 @@
+#include <iostream>
+#include <Windows.h>
+#include <cstring>
+using namespace std;
+
+const int SIZE_M = 20;
+
+class animal {
+
+private:
+	bool pol;//true - мужской , false - женский
+	char *name; // вид животного (собака , кот и тд)
+	int counter; // колличество животных
+	double  price; // цена 
+
+public:
+	animal(const animal &obj);
+	animal();
+	animal(bool pol, char *name, int counter, double  price);
+	~animal();
+	bool operator==(bool x) {
+		if (this->counter==x) return true;
+		else return false;
+	}
+	friend void save(int i);
+	friend void display();
+	friend void del();
+};
+
+animal mass[SIZE_M];
+int menu();
+void write();
+void save(int i);
+void display();
+void del();
+
+//---------------------------
+
+int main() {
+	setlocale(0, "RUS");
+
+	int mood;
+
+
+	do {
+		mood = menu();
+
+		switch (mood) {
+		case 1: write();
+			break;
+		case 2: display();
+			break;
+		case 3: 
+			del();
+			break;
+		case 4:
+			return 0;
+		}
+
+	} while ((mood - 4) != 0);
+
+}
+
+
+//-------------------------
+
+
+
+
+
+
+int menu() {
+	int mood;
+
+	cout << "Внести информацию - 1" << endl;
+	cout << "Получить информацию - 2" << endl;
+	cout << "Удалить информацию - 3" << endl;
+	cout << "Выйти - 4" << endl;
+
+	cin >> mood;
+//	system("cls"); ..................
+	return mood;
+}
+
+void write() {
+	int i=0;
+	while (!(mass[i] == 0)) {
+			i++;
+			if (i==SIZE_M){
+			cout << "Список полон" << endl;
+			return;
+		}
+	}
+	save(i);
+}
+
+void save(int i) {
+	cout << "Введите название животного: "; cin >> mass[i].name;
+	cout << "Введите пол животного (1 - М, 0 - Ж): "; cin >> mass[i].pol;
+	cout << "Введите колличество животных: "; cin >> mass[i].counter;
+	cout << "Введите цену за животного: "; cin >> mass[i].price;
+	cout << endl;
+//	system("cls"); ..................
+}
+
+void display() {
+	cout << endl;
+	for (int i = 0; i < SIZE_M; i++)
+	if(!(mass[i] == 0)){
+		cout << "-------------------------------------------------------" << endl;
+		cout << "Название: " << mass[i].name << endl;
+		cout << "Пол: "; if (mass[i].pol) cout << "мужской"<<endl; else cout << "женский"<<endl;
+		cout << "Колличество: " << mass[i].counter<<endl;
+		cout << "Цена: " << mass[i].price << endl;
+		cout << "-------------------------------------------------------" << endl<<endl;
+	}
+
+}
+
+void del() {
+	char name[80];
+	int i = 0, i2 = 0;
+	cout << "Введите название животного: "; cin >> name;
+	cout << endl;
+	for (i = 0; i < SIZE_M; i++)
+		if (!strcmp(mass[i].name, name)) { i2++; break; }
+	if (!i2) { cout << "Данное животное не найдено." << endl << endl; }
+	else
+	{
+		mass[i].name = '\0';
+		mass[i].pol = false;
+		mass[i].counter = 0;
+		mass[i].price = 0;
+	}
+	
+}
+
+
+
+
+animal::animal(const animal &obj) {
+	name = new char[80];
+	this->counter = 0;
+	this->pol=false;
+	this->price=0; 
+}
+
+animal::animal() {
+	name = new char[80];
+	this->counter = 0;
+	this->pol = false;
+	this->price = 0;
+}
+
+animal::animal(bool pol, char *name, int counter, double  price) {
+	name = new char[80];
+	this->pol = pol;
+	this->name = name;
+	this->counter = counter;
+	this->price = price;
+}
+
+animal::~animal() {
+	delete[] name;
+}
